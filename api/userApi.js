@@ -5,12 +5,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const baseUrl = `https://blog-api-c8j7.onrender.com/api`;
 
 // Storing data in local storage
-const storeData = async (value) => {
+const storeData = async (key, value) => {
     try {
-      const jsonValue = JSON.stringify(value)
-      await AsyncStorage.setItem('@storage_Key', jsonValue)
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem(key, jsonValue);
     } catch (e) {
         console.log(e);
+    }
+}
+
+// Removing data in local storage
+const removeData = async (key) => {
+    try {
+        await AsyncStorage.removeItem(key);
+    } catch (error) {
+        console.log(error);
     }
 }
 
@@ -20,14 +29,21 @@ export const login = async (data, dispatch, navigation) => {
     try {
         const res = await axios.post("https://blog-api-c8j7.onrender.com/api/user/login", data);
         dispatch(LOGIN_SUCCESS(res.data));
-        storeData(res.data.userInfo);
-        storeData(res.data.token);
+        storeData("user", res.data.userInfo);
+        storeData("token", res.data.token);
         navigation.navigate('Articles');
     } catch (error) {
         console.log(error);
         error && alert(error.response.data);
         dispatch(LOGIN_FAILURE());
     }
+}
+
+// Logout
+export const logout = async (dispatch, navigation) => {
+    dispatch(LOGOUT());
+    removeData("user");
+    navigation.navigate('Articles');
 }
 
 // All Users

@@ -8,10 +8,17 @@ import symbolicateStackTrace from "react-native/Libraries/Core/Devtools/symbolic
 import ArticleCard from "./ArticleCard";
 import Footer from "../components/Footer";
 import { useSelector } from "react-redux";
+import { logout } from "../api/userApi";
+import { useDispatch } from "react-redux";
 
 const Profile = () => {
   const navigation = useNavigation();
   const user = useSelector(state => state.userReducer.user);
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    logout(dispatch, navigation);
+  }
   
   return (
     <ScrollView>
@@ -48,6 +55,22 @@ const Profile = () => {
               Edit Profile
             </Text>
           </Pressable>
+          
+          {/* Logout Button */}
+          <Pressable
+            style={[styles.logout, styles.editLayout]}
+            onPress={handleLogout}
+          >
+            <LinearGradient
+              style={[styles.editProfileBtnChild, styles.logoutlayout]}
+              start={[0, 0]}
+              end={[1, 1]}
+              colors={["rgba(14, 215, 191, 0.6)", "rgba(0, 70, 111, 1)"]}
+            />
+            <Text style={[styles.editProfile, styles.studentTypo, styles.blogTypo]}>
+              Logout
+            </Text>
+          </Pressable>
 
           {/* User Profile-Pic */}
           <Image
@@ -57,13 +80,13 @@ const Profile = () => {
           />
 
           {/* Username */}
-          <Text style={styles.pranav4}>{user.username}</Text>
+          <Text style={styles.username}>{user.username}</Text>
 
           {/* Email */}
           <Text
             style={styles.emailText}
           >
-            visavadiapa@gmail.com
+            {user.email}
           </Text>
 
           {/* Bio */}
@@ -84,7 +107,7 @@ const Profile = () => {
             <Text
               style={styles.fieldValue}
             >
-              Full Stack Developer
+              {user.bio}
             </Text>
           </View>
 
@@ -106,7 +129,7 @@ const Profile = () => {
             <Text
               style={styles.fieldValue}
             >
-              Student
+              {user.work}
             </Text>
           </View>
 
@@ -128,7 +151,7 @@ const Profile = () => {
             <Text
               style={styles.fieldValue}
             >
-              Gujarat, India
+              {user.location}
             </Text>
           </View>
 
@@ -150,7 +173,7 @@ const Profile = () => {
             <Text
               style={styles.fieldValue}
             >
-              Gujarat, India
+              {new Date(user.createdAt).toDateString()}
             </Text>
           </View>
 
@@ -315,7 +338,7 @@ const styles = StyleSheet.create({
     // position: "absolute",
   },
   studentTypo: {
-    fontSize: GlobalStyles.FontSize.size_lg,
+    fontSize: GlobalStyles.FontSize.size_2xl,
   },
   studentTypo1: {
     textAlign: "center",
@@ -349,7 +372,12 @@ const styles = StyleSheet.create({
   },
   editLayout: {
     height: 36,
-    width: 100,
+    width: 110,
+    position: "absolute",
+  },
+  logoutlayout: {
+    height: 36,
+    width: 80,
     position: "absolute",
   },
   navPosition: {
@@ -577,11 +605,9 @@ const styles = StyleSheet.create({
     width: 163,
     textAlign: "left",
   },
-  pranav4: {
+  username: {
     top: 116,
-    left: 139,
     fontSize: GlobalStyles.FontSize.size_6xl,
-    width: '100%',
     color: GlobalStyles.Color.white,
     textAlign: "center",
     fontFamily: GlobalStyles.FontFamily.hammersmithOne,

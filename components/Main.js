@@ -101,7 +101,7 @@ const Main = () => {
               />
               <Stack.Screen
                 name="EditProfile"
-                component={EditProfile}
+                component={user ? EditProfile : Login}
                 options={{ headerShown: false }}
               />
               <Stack.Screen
@@ -121,12 +121,12 @@ const Main = () => {
               />
               <Stack.Screen
                 name="Saved"
-                component={SavedArticles}
+                component={user ? SavedArticles : Login}
                 options={{ headerShown: false }}
               />
               <Stack.Screen
                 name="Create"
-                component={CreateArticle}
+                component={user ? CreateArticle : Login}
                 options={{ headerShown: false }}
               />
             </Stack.Navigator>

@@ -102,10 +102,18 @@ export const userSlice = createSlice({
         state.forgotPasswordEmail = null;
         state.error = true;
     },
+    UPDATE_USER: (state, action) => {
+        state.user = action.payload;
+        state.token = state.token;
+        state.isFetching = false;
+        state.resetPassword = false;
+        state.forgotPasswordEmail = null;
+        state.error = false;
+    }
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { LOGIN_START, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT, USER_UPDATE, FORGOT_PASSWORD, FORGOT_PASSWORD_SUCCESS, FORGOT_PASSWORD_FAILURE, RESET_PASSWORD, RESET_PASSWORD_SUCCESS, RESET_PASSWORD_FAILURE } = userSlice.actions;
+export const { LOGIN_START, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT, USER_UPDATE, FORGOT_PASSWORD, FORGOT_PASSWORD_SUCCESS, FORGOT_PASSWORD_FAILURE, RESET_PASSWORD, RESET_PASSWORD_SUCCESS, RESET_PASSWORD_FAILURE, UPDATE_USER } = userSlice.actions;
 
 export default userSlice.reducer;

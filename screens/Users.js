@@ -14,9 +14,7 @@ const Users = () => {
   
   React.useEffect(() => {
     fetchAllUsers(setData);
-    console.log(data);
   }, []);
-  console.log(data);
   
   const usercard = data && data.map(e => {
     return(
@@ -25,8 +23,8 @@ const Users = () => {
         username={e.username}
         bio={e.bio}
         joinedDate={new Date(e.createdAt).toDateString()} 
-        noOfArticles={12}
-        noOfComments={17}
+        noOfArticles={e.articles.length}
+        noOfComments={e.comments.length}
         profilepic={e.profilepic}
       />
     );

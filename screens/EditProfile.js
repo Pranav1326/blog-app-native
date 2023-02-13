@@ -4,19 +4,31 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import GlobalStyles from "../GlobalStyles";
 import Footer from "../components/Footer";
+import { useSelector } from "react-redux";
+import { updateUser } from "../api/userProfile";
+import { useDispatch } from "react-redux";
 // import DocumentPicker from "react-native-document-picker";
 
 const EditProfile = () => {
   const navigation = useNavigation();
+  const user = useSelector(state => state.userReducer.user);
+  const dispatch = useDispatch();
 
-  const [ bio, setBio ] = React.useState("");
-  const [ work, setWork ] = React.useState("");
-  const [ location, setLocation ] = React.useState("");
-  const [ email, setEmail ] = React.useState("");
+  const [ bio, setBio ] = React.useState(user.bio);
+  const [ work, setWork ] = React.useState(user.work);
+  const [ location, setLocation ] = React.useState(user.location);
+  const [ email, setEmail ] = React.useState(user.email);
   
   const handleSubmit = e => {
     // e.preventDefault();
     console.log(bio, work, location, email);
+    const userData = {
+      bio: bio!=="" ? bio : "",
+      work: work!=="" ? work : "",
+      location: location!=="" ? location : "",
+      email: email!=="" ? email : "",
+    }
+    updateUser(userData,user._id, user.username, dispatch, navigation);
   }
   
   return (
@@ -37,11 +49,11 @@ const EditProfile = () => {
           <Image
             style={styles.profileIcon}
             resizeMode="cover"
-            source={require("../assets/profile15.png")}
+            source={ user.profilepic === "" ? require("../assets/profile123x.png") : {uri: user.profilepic} }
           />
         
           {/* Username */}
-          <Text style={styles.username}>Pranav</Text>
+          <Text style={styles.username}>{user.username}</Text>
 
           {/* Bio */}
           <View style={styles.fieldBox}>
@@ -232,6 +244,9 @@ const styles = StyleSheet.create({
   },
   profileIcon: {
     alignSelf: 'center',
+    width: 120,
+    height: 120,
+    borderRadius: '100%',
   },
   username: {
     fontSize: GlobalStyles.FontSize.size_7xl,
