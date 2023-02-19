@@ -6,6 +6,8 @@ import GlobalStyles from "../GlobalStyles";
 import { ScrollView } from "react-native-gesture-handler";
 import Footer from "../components/Footer";
 import { fetchArticle } from "../api/article";
+import Markdown from 'react-native-simple-markdown'
+import Comments from "../components/Comments";
 
 const Article = ({ route }) => {
   const navigation = useNavigation();
@@ -24,6 +26,16 @@ const Article = ({ route }) => {
       </View>
     );
   }
+  
+  const renderTags = article && article.tags.map(tag => {
+    return(
+      <View style={styles.tagPosition}>
+        <Text style={[styles.tagText, styles.webdevPosition]}>
+          {tag}
+        </Text>
+      </View>
+    );
+  })
   
   return (
     <ScrollView>
@@ -54,9 +66,9 @@ const Article = ({ route }) => {
               ]}
             >
               <Image
-                style={styles.profileLayout}
+                style={styles.profilePictureLayout}
                 resizeMode="cover"
-                source={require("../assets/profile16.png")}
+                source={require("../assets/profile123x.png")}
               />
               <View style={styles.authorDate}>
                 <Text style={[styles.pranav, styles.pranavPosition]}
@@ -75,28 +87,104 @@ const Article = ({ route }) => {
 
             {/* Tags */}
             <View style={[styles.tags, styles.tagsShadowBox]}>
-              <View style={styles.tagPosition}>
-                <Text style={[styles.tagText, styles.webdevPosition]}>
-                  javascript
-                </Text>
-              </View>
+              {renderTags}
             </View>
           </View>
 
           {/* Article Body */}
           <View style={[styles.articleBody, styles.tagsShadowBox]}>
             {/* <ReactMarkdown children={article.content} /> */}
-              {console.log(article.content)}
-              {/* {article.content} */}
+              <Markdown styles={markdownStyles}>
+                {article.content}
+              </Markdown>
           </View>
 
         </View>
       </View>
+      <Comments articleTitle={article.title} articleId={id} />
       <Footer />
     </ScrollView>
 
   );
 };
+
+const markdownStyles = {
+  View: {
+    backgroundColor: '#fff'
+  },
+  heading1: {
+    fontSize: GlobalStyles.FontSize.size_7xl,
+    color: GlobalStyles.Color.white,
+    marginTop: 15,
+    marginBottom: 15,
+    fontWeight: '700',
+  },
+  heading2: {
+    fontSize: GlobalStyles.FontSize.size_7xl,
+    color: GlobalStyles.Color.white,
+    fontWeight: '700',
+    marginTop: 15,
+    marginBottom: 15,
+  },
+  heading3: {
+    fontSize: GlobalStyles.FontSize.size_7xl,
+    color: GlobalStyles.Color.white,
+    fontWeight: '700',
+    marginTop: 15,
+    marginBottom: 15,
+  },
+  heading4: {
+    fontSize: GlobalStyles.FontSize.size_7xl,
+    color: GlobalStyles.Color.white,
+    fontWeight: '700',
+    marginTop: 15,
+    marginBottom: 15,
+  },
+  heading5: {
+    fontSize: GlobalStyles.FontSize.size_7xl,
+    color: GlobalStyles.Color.white,
+    marginTop: 15,
+    marginBottom: 15,
+    fontWeight: '700',
+  },
+  heading6: {
+    fontSize: GlobalStyles.FontSize.size_7xl,
+    color: GlobalStyles.Color.white,
+    marginTop: 15,
+    marginBottom: 15,
+    fontWeight: '700',
+  },
+  link: {
+    marginTop: 5,
+    marginBottom: 5,
+    color: GlobalStyles.Color.white,
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    paddingLeft: 5,
+    paddingRight: 5,
+  },
+  mailTo: {
+    color: GlobalStyles.Color.white,
+  },
+  text: {
+    color: GlobalStyles.Color.white,
+    fontSize: GlobalStyles.FontSize.size_4xl,
+    marginTop: 1,
+  },
+  strong: {
+    fontWeight: '700',
+  },
+  blockQuote: {
+    marginTop: 10,
+    marginBottom: 10,
+    paddingTop: 5,
+  },
+  inlineCode: {
+    marginTop: 10,
+    marginBottom: 10,
+    padding: 5,
+    backgroundColor: 'rgba(255,255,255,0.15)',
+  }
+}
 
 const styles = StyleSheet.create({
   articlePosition: {
@@ -105,7 +193,6 @@ const styles = StyleSheet.create({
   },
   tagsShadowBox: {
     shadowOpacity: 1,
-    elevation: 4,
     shadowRadius: 4,
     shadowOffset: {
       width: 0,
@@ -162,7 +249,7 @@ const styles = StyleSheet.create({
   },
   webdevPosition: {
     top: 3,
-    fontSize: GlobalStyles.FontSize.size_base,
+    fontSize: GlobalStyles.FontSize.size_2xl,
     fontFamily: GlobalStyles.FontFamily.hammersmithOne,
     backgroundColor: GlobalStyles.Color.gray_500,
     borderRadius: GlobalStyles.Border.br_sm,
@@ -184,6 +271,11 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'center',
   },
+  profilePictureLayout: {
+    width: 60,
+    height: 60,
+    marginRight: 20,
+  },
   pranavPosition: {
     fontFamily: GlobalStyles.FontFamily.hammersmithOne,
     textAlign: "left",
@@ -194,7 +286,7 @@ const styles = StyleSheet.create({
   },
   articleBg: {
     top: 192,
-    height: 1000,
+    height: '100%',
     position: 'absolute',
     backgroundColor: "transparent",
   },
@@ -257,9 +349,11 @@ const styles = StyleSheet.create({
   },
   articleBody: {
     top: 20,
-    height: 500,
-    left: 10,
-    elevation: 4,
+    height: '100%',
+    width: '95%',
+    marginBottom: 60,
+    marginLeft: 10,
+    marginRight: 10,
     shadowRadius: 4,
     shadowOffset: {
       width: 0,
@@ -295,7 +389,7 @@ const styles = StyleSheet.create({
     left: 80,
   },
   tagPosition: {
-    top: -230,
+    top: 20,
     left: 0,
   },
   tagText: {
@@ -306,35 +400,33 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   tags: {
-    top: 502,
+    marginTop: 10,
+    marginBottom: 20,
     left: 12,
     display: 'flex',
     flexDirection: "row",
   },
   whyCookieIsPreferableCompa: {
-    top: 266,
-    fontSize: GlobalStyles.FontSize.size_7xl,
+    top: 25,
+    fontSize: GlobalStyles.FontSize.size_9xl,
     textShadowColor: "rgba(0, 0, 0, 0.25)",
     textShadowRadius: 4,
     left: 12,
-    width: 390,
     textShadowOffset: {
       width: 0,
       height: 4,
     },
-    position: "absolute",
   },
   postedOn18Aug2022: {
-    marginLeft: 54,
+    marginLeft: 60,
     marginTop: 5,
     color: GlobalStyles.Color.gray_100,
     fontSize: GlobalStyles.FontSize.size_lg,
   },
   pranav: {
     fontSize: 24,
-    height: 23,
     color: GlobalStyles.Color.white,
-    marginLeft: 54,
+    marginLeft: 60,
     top: 0,
   },
   profileIcon: {
@@ -350,7 +442,6 @@ const styles = StyleSheet.create({
     top: 0,
   },
   articldeHeader: {
-    height: 522,
     top: 0,
   },
   article1: {
@@ -385,7 +476,8 @@ const styles = StyleSheet.create({
   authorDate: {
     display: 'flex',
     flexDirection: 'column',
-    marginTop: -45,
+    marginTop: -55,
+    marginLeft: 10,
   },
   title: {
     position: 'absolute',
