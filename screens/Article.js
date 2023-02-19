@@ -5,10 +5,26 @@ import { useNavigation } from "@react-navigation/native";
 import GlobalStyles from "../GlobalStyles";
 import { ScrollView } from "react-native-gesture-handler";
 import Footer from "../components/Footer";
+import { fetchArticle } from "../api/article";
 
-const Article = () => {
+const Article = ({ route }) => {
   const navigation = useNavigation();
+  const { id } = route.params;
 
+  const [ article, setData ] = React.useState(null);
+
+  React.useEffect(() => {
+    fetchArticle(id, setData);
+  }, []);
+
+  if(!article){
+    return (
+      <View style={styles.article}>
+        <Text style={styles.loadingText}>Loading...</Text>
+      </View>
+    );
+  }
+  
   return (
     <ScrollView>
       <View style={styles.article}>
@@ -44,18 +60,17 @@ const Article = () => {
               />
               <View style={styles.authorDate}>
                 <Text style={[styles.pranav, styles.pranavPosition]}
-                  onPress={() => navigation.navigate("Profile")}
-                >Pranav</Text>
+                  onPress={() => navigation.navigate("AuthorProfile", {id: article.authorId})}
+                >{article.author}</Text>
                 <Text style={[styles.postedOn18Aug2022, styles.pranavPosition]}>
-                  Posted on 18 Aug 2022
+                  {new Date(article.createdAt).toDateString()}
                 </Text>
               </View>
             </View>
 
             {/* Title */}
             <Text style={[styles.whyCookieIsPreferableCompa, styles.blogTypo]}>
-              Why cookie is preferable compared to localStorage when it comes to
-              authentication
+              {article.title}
             </Text>
 
             {/* Tags */}
@@ -70,88 +85,9 @@ const Article = () => {
 
           {/* Article Body */}
           <View style={[styles.articleBody, styles.tagsShadowBox]}>
-            <View style={styles.code}>
-              <View style={styles.codeChild} />
-              <Text
-                style={[
-                  styles.localstoragesetitemyourtoke,
-                  styles.localstoragesetitemyourtokeTypo,
-                ]}
-              >
-                localStorage.setItem("yourTokenName", yourToken);
-              </Text>
-              <Text
-                style={[
-                  styles.localstoragegetitemyourtoke,
-                  styles.localstoragesetitemyourtokeTypo,
-                ]}
-              >
-                localStorage.getItem("yourTokenName", yourToken);
-              </Text>
-            </View>
-            <View style={[styles.articleBodyChild, styles.articleLayout]} />
-            <View style={[styles.articleBodyItem, styles.articleLayout]} />
-            <Text
-              style={[
-                styles.toUseLocalstorageJustSim,
-                styles.inThisArticleIWillBreakTypo,
-              ]}
-            >
-              <Text style={styles.toUse}>{`To use  `}</Text>
-              <Text style={styles.localstorage}>localStorage</Text>
-              <Text
-                style={styles.toUse}
-              >{` , just simply call use the           `}</Text>
-              <Text style={styles.localstorage}>localStorage</Text>
-              <Text style={styles.toUse}> object</Text>
-            </Text>
-            <Text
-              style={[
-                styles.localStorage,
-                styles.tagsLayout,
-                styles.comparisonTypo,
-              ]}
-            >
-              Local Storage
-            </Text>
-            <Text
-              style={[
-                styles.comparison,
-                styles.tagsLayout,
-                styles.comparisonTypo,
-              ]}
-            >
-              Comparison
-            </Text>
-            <Text
-              style={[
-                styles.inThisArticleIWillBreak,
-                styles.inThisArticleIWillBreakTypo,
-              ]}
-            >
-              In this article, I will break down 2 common places to store tokens.
-              Cookies and LocalStorage
-            </Text>
-            <Text
-              style={[
-                styles.weKnowAboutJwtOrJsonWeb,
-                styles.inThisArticleIWillBreakTypo,
-              ]}
-            >
-              We know about JWT, or JSON Web Token, as an industry standard RFC
-              7519 method for representing claims securely between two parties.
-              JWT is very common nowadays. But where should we store them in the
-              front end?
-            </Text>
-            <Text
-              style={[
-                styles.introduction,
-                styles.title,
-                styles.comparisonTypo,
-              ]}
-            >
-              Introduction
-            </Text>
+            {/* <ReactMarkdown children={article.content} /> */}
+              {console.log(article.content)}
+              {/* {article.content} */}
           </View>
 
         </View>
@@ -330,6 +266,7 @@ const styles = StyleSheet.create({
       height: 4,
     },
     shadowColor: "rgba(0, 0, 0, 0.25)",
+    color: GlobalStyles.Color.white,
   },
   tag1: {
     left: 0,
@@ -453,7 +390,13 @@ const styles = StyleSheet.create({
   title: {
     position: 'absolute',
     top: 10,
-  }
+  },
+  loadingText: {
+    color: GlobalStyles.Color.white,
+    fontSize: GlobalStyles.FontSize.size_10xl,
+    fontFamily: GlobalStyles.FontFamily.hammersmithOne,
+    textAlign: 'center',
+  },
 });
 
 export default Article;

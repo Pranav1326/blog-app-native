@@ -18,6 +18,7 @@ import About from "../screens/About";
 import EditProfile from "../screens/EditProfile";
 import Article from "../screens/Article";
 import Profile from "../screens/Profile";
+import AuthorProfile from "../screens/AuthorProfile";
 import Template from "../screens/Template";
 import SearchArticle from "../screens/SearchArticle";
 import SavedArticles from "../screens/SavedArticles";
@@ -112,6 +113,12 @@ const Main = () => {
               <Stack.Screen
                 name="Profile"
                 component={user ? Profile : Login}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="AuthorProfile"
+                // component={user ? Profile : Login}
+                component={AuthorProfile}
                 options={{ headerShown: false }}
               />
               <Stack.Screen

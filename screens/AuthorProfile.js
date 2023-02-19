@@ -4,193 +4,183 @@ import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import GlobalStyles from "../GlobalStyles";
 import { ScrollView } from "react-native-gesture-handler";
-import symbolicateStackTrace from "react-native/Libraries/Core/Devtools/symbolicateStackTrace";
 import ArticleCard from "./ArticleCard";
 import Footer from "../components/Footer";
 import { useSelector } from "react-redux";
 import { logout } from "../api/userApi";
 import { useDispatch } from "react-redux";
+import { getAuthorArticles, getUser } from "../api/userProfile";
+import axios from "axios";
 
-const Profile = () => {
-  const navigation = useNavigation();
-  const user = useSelector(state => state.userReducer.user);
-  const dispatch = useDispatch();
+const AuthorProfile = ({route}) => {
+    const navigation = useNavigation();
+    const { id } = route.params;
 
-  const handleLogout = () => {
-    logout(dispatch, navigation);
-  }
+    const [ user, setUser ] = React.useState({});
+    const [ articles, setArticles ] = React.useState(null);
+
+    React.useEffect(() => {
+        getUser(id, setUser);
+        // getAuthorArticles(id);
+    }, []);
+    console.log(articles);
   
-  return (
-    <ScrollView>
-      <View style={styles.profile}>
-        {/* Main Background */}
-        <LinearGradient 
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 1}}
-          colors={["rgba(14, 215, 191, 0.5)", "rgba(0, 70, 111, 0.4)"]}
-          style={styles.bg}
-        />
-        
-        <View
-          style={[
-            styles.profileBox,
-            // styles.articleLayout,
-            styles.articleShadowBox1,
-          ]}
-        >
-          {/* <View style={[styles.profileBg, styles.articleLayout, styles.bgBg]} /> */}
-
-          {/* Edit Profile Button */}
-          <Pressable
-            style={[styles.editProfileBtn, styles.editLayout]}
-            onPress={() => navigation.navigate("EditProfile")}
-          >
-            <LinearGradient
-              style={[styles.editProfileBtnChild, styles.editLayout]}
-              start={[0, 0]}
-              end={[1, 1]}
-              colors={["rgba(14, 215, 191, 0.6)", "rgba(0, 70, 111, 1)"]}
+    const renderArtices = articles && articles.map(article => {
+        return(
+            <ArticleCard
+            key={article._id}
+            id={article.authorId}
+            author={article.author}
+            createdAt={new Date(article.createdAt).toDateString()}
+            title={article.title}
+            tags={article.tags}
+            // comments={article && article.comments.length}
             />
-            <Text style={[styles.editProfile, styles.studentTypo, styles.blogTypo]}>
-              Edit Profile
-            </Text>
-          </Pressable>
-          
-          {/* Logout Button */}
-          <Pressable
-            style={[styles.logout, styles.editLayout]}
-            onPress={handleLogout}
-          >
-            <LinearGradient
-              style={[styles.editProfileBtnChild, styles.logoutlayout]}
-              start={[0, 0]}
-              end={[1, 1]}
-              colors={["rgba(14, 215, 191, 0.6)", "rgba(0, 70, 111, 1)"]}
+        );
+    });
+  
+    return (
+        <ScrollView>
+        <View style={styles.profile}>
+            {/* Main Background */}
+            <LinearGradient 
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 1}}
+            colors={["rgba(14, 215, 191, 0.5)", "rgba(0, 70, 111, 0.4)"]}
+            style={styles.bg}
             />
-            <Text style={[styles.editProfile, styles.studentTypo, styles.blogTypo]}>
-              Logout
-            </Text>
-          </Pressable>
-
-          {/* User Profile-Pic */}
-          <Image
-            style={styles.profileIcon4}
-            resizeMode="cover"
-            source={ user && (user.profilepic === "" ? require("../assets/profile123x.png") : {uri: user.profilepic }) }
-          />
-
-          {/* Username */}
-          <Text style={styles.username}>{user.username}</Text>
-
-          {/* Email */}
-          <Text
-            style={styles.emailText}
-          >
-            {user.email}
-          </Text>
-
-          {/* Bio */}
-          <View style={styles.fieldBox}>
-            <LinearGradient 
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 1}}
-              colors={["rgba(0, 70, 111, 0.4)", "rgba(14, 215, 191, 0.45)"]}
-              style={styles.bgBio}
-            /> 
-            <View style={styles.fieldTitleParent}>
-              <View style={styles.fieldTitleBgLayout} />
-              <Text style={[styles.fieldTitle]}>
-                Bio
-              </Text>
-            </View>
-            <View style={styles.joinedOnTextBg} />
-            <Text
-              style={styles.fieldValue}
+            
+            <View
+            style={[
+                styles.profileBox,
+                // styles.articleLayout,
+                styles.articleShadowBox1,
+            ]}
             >
-              {user.bio}
-            </Text>
-          </View>
+            {/* <View style={[styles.profileBg, styles.articleLayout, styles.bgBg]} /> */}
 
-          {/* Work */}
-          <View style={styles.fieldBox}>
-            <LinearGradient 
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 1}}
-              colors={["rgba(0, 70, 111, 0.4)", "rgba(14, 215, 191, 0.45)"]}
-              style={styles.bgBio}
-            /> 
-            <View style={styles.fieldTitleParentWork}>
-              <View style={styles.fieldTitleBgLayout} />
-              <Text style={styles.fieldTitle}>
-                Work
-              </Text>
-            </View>
-            <View style={styles.joinedOnTextBg} />
+            {/* User Profile-Pic */}
+            <Image
+                style={styles.profileIcon4}
+                resizeMode="cover"
+                source={ user && (user.profilepic === "" ? require("../assets/profile123x.png") : {uri: user.profilepic }) }
+            />
+
+            {/* Username */}
+            <Text style={styles.username}>{user.username}</Text>
+
+            {/* Email */}
             <Text
-              style={styles.fieldValue}
+                style={styles.emailText}
             >
-              {user.work}
+                {user.email}
             </Text>
-          </View>
 
-          {/* Location */}
-          <View style={styles.fieldBox}>
-            <LinearGradient 
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 1}}
-              colors={["rgba(0, 70, 111, 0.4)", "rgba(14, 215, 191, 0.45)"]}
-              style={styles.bgBio}
-            /> 
-            <View style={styles.fieldTitleParentLocation}>
-              <View style={styles.fieldTitleBgLayout} />
-              <Text style={styles.fieldTitle}>
-                Location
-              </Text>
+            {/* Bio */}
+            <View style={styles.fieldBox}>
+                <LinearGradient 
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 1}}
+                colors={["rgba(0, 70, 111, 0.4)", "rgba(14, 215, 191, 0.45)"]}
+                style={styles.bgBio}
+                /> 
+                <View style={styles.fieldTitleParent}>
+                <View style={styles.fieldTitleBgLayout} />
+                <Text style={[styles.fieldTitle]}>
+                    Bio
+                </Text>
+                </View>
+                <View style={styles.joinedOnTextBg} />
+                <Text
+                style={styles.fieldValue}
+                >
+                {user.bio}
+                </Text>
             </View>
-            <View style={styles.joinedOnTextBg} />
-            <Text
-              style={styles.fieldValue}
-            >
-              {user.location}
-            </Text>
-          </View>
 
-          {/* Joined On */}
-          <View style={styles.fieldBox}>
-            <LinearGradient 
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 1}}
-              colors={["rgba(0, 70, 111, 0.4)", "rgba(14, 215, 191, 0.45)"]}
-              style={styles.bgBio}
-            /> 
-            <View style={styles.fieldTitleParentJoinedon}>
-              <View style={styles.fieldTitleBgLayout} />
-              <Text style={styles.fieldTitle}>
-                Joined On
-              </Text>
+            {/* Work */}
+            <View style={styles.fieldBox}>
+                <LinearGradient 
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 1}}
+                colors={["rgba(0, 70, 111, 0.4)", "rgba(14, 215, 191, 0.45)"]}
+                style={styles.bgBio}
+                /> 
+                <View style={styles.fieldTitleParentWork}>
+                <View style={styles.fieldTitleBgLayout} />
+                <Text style={styles.fieldTitle}>
+                    Work
+                </Text>
+                </View>
+                <View style={styles.joinedOnTextBg} />
+                <Text
+                style={styles.fieldValue}
+                >
+                {user.work}
+                </Text>
             </View>
-            <View style={styles.joinedOnTextBg} />
-            <Text
-              style={styles.fieldValue}
-            >
-              {new Date(user.createdAt).toDateString()}
-            </Text>
-          </View>
 
+            {/* Location */}
+            <View style={styles.fieldBox}>
+                <LinearGradient 
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 1}}
+                colors={["rgba(0, 70, 111, 0.4)", "rgba(14, 215, 191, 0.45)"]}
+                style={styles.bgBio}
+                /> 
+                <View style={styles.fieldTitleParentLocation}>
+                <View style={styles.fieldTitleBgLayout} />
+                <Text style={styles.fieldTitle}>
+                    Location
+                </Text>
+                </View>
+                <View style={styles.joinedOnTextBg} />
+                <Text
+                style={styles.fieldValue}
+                >
+                {user.location}
+                </Text>
+            </View>
+
+            {/* Joined On */}
+            <View style={styles.fieldBox}>
+                <LinearGradient 
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 1}}
+                colors={["rgba(0, 70, 111, 0.4)", "rgba(14, 215, 191, 0.45)"]}
+                style={styles.bgBio}
+                /> 
+                <View style={styles.fieldTitleParentJoinedon}>
+                <View style={styles.fieldTitleBgLayout} />
+                <Text style={styles.fieldTitle}>
+                    Joined On
+                </Text>
+                </View>
+                <View style={styles.joinedOnTextBg} />
+                <Text
+                style={styles.fieldValue}
+                >
+                {new Date(user.createdAt).toDateString()}
+                </Text>
+            </View>
+
+            </View>
+
+            <View style={styles.articleSection}>
+            {/* User Articles */}
+            {/* <Text style={[styles.articles, styles.blogTypo]}>Articles</Text> */}
+            {/* {user.articles === [] ? 
+                <Text style={styles.noArticles}>No Articles written by you!</Text>
+                : 
+                {renderArtices}
+            } */}
+            {/* {renderArtices} */}
+            </View>
+
+            <Footer />
         </View>
-
-        <View style={styles.articleSection}>
-          {/* User Articles */}
-          <Text style={[styles.articles, styles.blogTypo]}>Articles</Text>
-          <ArticleCard />
-          <ArticleCard />
-          {/* <Text style={styles.noArticles}>No Articles written by you!</Text> */}
-        </View>
-
-        <Footer />
-      </View>
-    </ScrollView>
-  );
+        </ScrollView>
+    );
 };
 
 const styles = StyleSheet.create({
@@ -709,7 +699,8 @@ const styles = StyleSheet.create({
     borderColor: GlobalStyles.Color.white,
     display: 'flex',
     flexDirection: 'column',
-    margin: 10
+    margin: 10,
+    zIndex: 10,
   },
   fieldTitleParent: {
     width: 38,
@@ -721,8 +712,10 @@ const styles = StyleSheet.create({
   fieldValue: {
     color: GlobalStyles.Color.white,
     fontSize: GlobalStyles.FontSize.size_4xl,
-    left: 20,
-    top: -65
+    // left: 20,
+    paddingLeft: 15,
+    top: -65,
+    overflow: 'scroll',
   },
   fieldTitleParentWork: {
     width: 54,
@@ -760,4 +753,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Profile;
+export default AuthorProfile;

@@ -4,13 +4,31 @@ import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import GlobalStyles from "../GlobalStyles";
 import { ScrollView } from "react-native-gesture-handler";
+import { getUser } from "../api/userProfile";
 
-const ArticleCard = () => {
+const ArticleCard = ({articleId, authorId, author, createdAt, title, tags, comments}) => {
     const navigation = useNavigation();
+
+    const [data, setData] = React.useState(null);
+    
+    React.useEffect(() => {
+      getUser(authorId, setData);
+    }, []);
+    
+    const renderTags = data && tags.map((tag, i) => {
+      return(
+        <View key={i} style={styles.tag}>
+          <Text style={styles.tagText}>
+            {tag}
+          </Text>
+        </View>
+      );
+    });
+    
     return(
       <Pressable
         style={styles.article}
-        onPress={() => navigation.navigate("Article")}
+        onPress={() => navigation.navigate("Article", {id: articleId})}
       >
         <View style={styles.bg} />
         <LinearGradient 
@@ -28,45 +46,30 @@ const ArticleCard = () => {
             styles.profileLayout,
             styles.profilePosition,
             ]}
-            onPress={() => navigation.navigate("Profile")}
+            onPress={() => navigation.navigate("AuthorProfile", {id: data._id})}
           >
             <Image
               style={styles.icon}
               resizeMode="cover"
-              source={require("../assets/profile20.png")}
+              source={ data && (data.profilepic === "" ? require("../assets/profile123x.png") : {uri: data.profilepic }) }
             />
           </Pressable>
           <View style={styles.usernameDate}>
-            <Text style={styles.username}>Pranav</Text>
+            <Text style={styles.username}>{author}</Text>
             <Text style={styles.publishDate}>
-            18 Aug 2022
+              {createdAt}
             </Text>
           </View>
         </View>
 
         {/* Title */}
         <Text style={styles.titleText}>
-          Why cookie is preferable compared to localStorage when it comes to
-          authentication
+          {title}
         </Text>
         
         {/* Tags */}
         <View style={styles.tags}>
-          <View style={styles.tag}>
-            <Text style={styles.tagText}>
-              programming
-            </Text>
-          </View>
-          <View style={styles.tag}>
-            <Text style={styles.tagText}>
-              webdev
-            </Text>
-          </View>
-          <View style={styles.tag}>
-            <Text style={styles.tagText}>
-              javascript
-            </Text>
-          </View>
+          {renderTags}
         </View>
 
         {/* Card Tail Info */}
@@ -87,7 +90,7 @@ const ArticleCard = () => {
             
             {/* Comments */}
             <View style={styles.comments}>
-            <Text style={styles.commentsText}>5</Text>
+            <Text style={styles.commentsText}>{comments}</Text>
             <Image
               style={styles.commentsImage}
               resizeMode="cover"
@@ -142,6 +145,7 @@ const styles = StyleSheet.create({
   icon: {
     width: 60,
     height: 60,
+    borderRadius: "100%",
   },
   usernameDate: {
     display: 'flex',

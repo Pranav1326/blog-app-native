@@ -5,19 +5,45 @@ import { LinearGradient } from "expo-linear-gradient";
 import ArticleCard from './ArticleCard';
 import GlobalStyles from "../GlobalStyles";
 import { ScrollView } from "react-native-gesture-handler";
+import { fetchAllArticles } from "../api/article";
 
 const Articles = () => {
   const navigation = useNavigation();
+  
+  const [ data, setData ] = React.useState([]);
+
+  React.useEffect(() => {
+    fetchAllArticles(setData);
+  }, []);
+  
+  const renderArtices = data.map(article => {
+    return(
+      <ArticleCard
+        key={article._id}
+        articleId={article._id}
+        authorId={article.authorId}
+        author={article.author}
+        createdAt={new Date(article.createdAt).toDateString()}
+        title={article.title}
+        tags={article.tags}
+        comments={article.comments.length}
+      />
+    );
+  });
+  
+  if(data === []){
+    return(
+      <View styles={styles.articles}>
+        <Text styles={styles.loadingText}>Loading...</Text>
+      </View>
+    );
+  }
   
   return (
     <ScrollView>
       <View style={styles.articles}>
         <Text style={styles.mainHeading}>Articles</Text>
-        <ArticleCard />
-        <ArticleCard />
-        <ArticleCard />
-        <ArticleCard />
-        <ArticleCard />
+        {renderArtices}
       </View>
     </ScrollView>
   );
@@ -335,6 +361,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 5,
     marginBottom: -10,
+  },
+  loadingText: {
+    color: GlobalStyles.Color.white,
+    fontSize: GlobalStyles.FontSize.size_10xl,
+    fontFamily: GlobalStyles.FontFamily.hammersmithOne,
+    textAlign: 'center',
   },
 });
 

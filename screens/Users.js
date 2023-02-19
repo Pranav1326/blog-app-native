@@ -30,6 +30,14 @@ const Users = () => {
     );
   });
   
+  if(!data){
+    return (
+      <View style={styles.users}>
+        <Text style={styles.loadingText}>Loading...</Text>
+      </View>
+    );
+  }
+  
   return (
     <ScrollView>
       <View style={styles.users}>
@@ -291,6 +299,12 @@ const styles = StyleSheet.create({
     fontSize: GlobalStyles.FontSize.size_8xl,
     fontFamily: GlobalStyles.FontFamily.hammersmithOne,
     textAlign: 'center',
+  },
+  loadingText: {
+    color: GlobalStyles.Color.white,
+    fontSize: GlobalStyles.FontSize.size_9xl,
+    fontFamily: GlobalStyles.FontFamily.hammersmithOne,
+    textAlign: 'center',  
   },
 });
 
