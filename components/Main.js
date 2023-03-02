@@ -37,6 +37,7 @@ const Main = () => {
   const [fontsLoaded] = useFonts({
     "Hammersmith One": require("../assets/fonts/Hammersmith_One.ttf"),
     "Ubuntu Mono": require("../assets/fonts/Ubuntu_Mono.ttf"),
+    "Courier": require("../assets/fonts/CourierPrime-Regular.ttf"),
   });
 
   if (!fontsLoaded) {

@@ -16,10 +16,11 @@ const Users = () => {
     fetchAllUsers(setData);
   }, []);
   
-  const usercard = data && data.map(e => {
+  const usercard = data && data.map((e, id) => {
     return(
-      <UserCard 
-        key={e._id}
+      <UserCard
+        key={id}
+        userId={e._id}
         username={e.username}
         bio={e.bio}
         joinedDate={new Date(e.createdAt).toDateString()} 

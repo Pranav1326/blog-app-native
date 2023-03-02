@@ -55,3 +55,13 @@ export const fetchAllUsers = async (setData) => {
         console.log(error);
     }
 }
+
+// User Register
+export const register = async (data, setMsg) => {
+    try {
+        const res = await axios.post(`${baseUrl}/user/register`, data);
+        setMsg(`User ${data.username} created.`);
+    } catch (error) {
+        console.log(error);
+    }
+} 

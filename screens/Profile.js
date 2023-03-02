@@ -10,12 +10,34 @@ import Footer from "../components/Footer";
 import { useSelector } from "react-redux";
 import { logout } from "../api/userApi";
 import { useDispatch } from "react-redux";
+import { getAuthorArticles } from "../api/userProfile";
 
 const Profile = () => {
   const navigation = useNavigation();
   const user = useSelector(state => state.userReducer.user);
   const dispatch = useDispatch();
 
+  const [ articles, setArticles ] = React.useState(null);
+  
+  React.useEffect(() => {
+    getAuthorArticles(user.username, setArticles);
+  },[]);
+  
+  const renderArticles = articles && articles.map((article, id) => {
+    return(
+      <ArticleCard
+        key={id}
+        articleId={article._id}
+        authorId={article.authorId}
+        author={article.author}
+        createdAt={new Date(article.createdAt).toDateString()}
+        title={article.title}
+        tags={article.tags}
+        comments={article.comments.length}
+      />
+    );
+  });
+  
   const handleLogout = () => {
     logout(dispatch, navigation);
   }
@@ -72,7 +94,7 @@ const Profile = () => {
             </Text>
           </Pressable>
 
-          {/* User Profile-Pic */}
+          {/* User Profile-Pic */} 
           <Image
             style={styles.profileIcon4}
             resizeMode="cover"
@@ -182,9 +204,11 @@ const Profile = () => {
         <View style={styles.articleSection}>
           {/* User Articles */}
           <Text style={[styles.articles, styles.blogTypo]}>Articles</Text>
-          <ArticleCard />
-          <ArticleCard />
-          {/* <Text style={styles.noArticles}>No Articles written by you!</Text> */}
+          {/* <ArticleCard />
+          <ArticleCard /> */}
+          {articles ? renderArticles
+          : <Text style={styles.noArticles}>No Articles written by you!</Text>
+          }
         </View>
 
         <Footer />

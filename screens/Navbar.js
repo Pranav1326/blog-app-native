@@ -35,7 +35,7 @@ const Navbar = () => {
             <Image
               resizeMode="cover"
               style={styles.profilepic}
-              source={{uri: "http://localhost:5000/images/1671528071224Profile-Pic.jpg"}}
+              source={ user && (user.profilepic === "" ? require("../assets/profile123x.png") : {uri: user.profilepic }) }
               // source={require('../assets/logo/user.png')}
             />
           </Pressable>
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     top: 10,
-    // right: 20,
+    borderRadius: 100,
   }
 });
 

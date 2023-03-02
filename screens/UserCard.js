@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import GlobalStyles from '../GlobalStyles'
 import { useNavigation } from '@react-navigation/core'
 
-const UserCard = ({username, bio, joinedDate, noOfArticles, noOfComments, profilepic}) => {
+const UserCard = ({userId, username, bio, joinedDate, noOfArticles, noOfComments, profilepic}) => {
     const navigation = useNavigation();
     return (
         <View style={styles.UserCard}>
@@ -21,11 +21,14 @@ const UserCard = ({username, bio, joinedDate, noOfArticles, noOfComments, profil
                 <Image
                     style={[styles.icon, styles.shadow]}
                     resizeMode="cover"
-                    // source={require("../assets/profile123x.png")}
                     source={ profilepic === "" ? require("../assets/profile123x.png") : {uri: profilepic } }
+                    onPress={() => navigation.navigate("AuthorProfile", {id: userId})}
                 />
                 <View style={[styles.usernameNJoinedView, styles.shadow]}>
-                    <Text style={styles.usernameText}>{username}</Text>
+                    <Text 
+                        style={styles.usernameText}
+                        onPress={() => navigation.navigate("AuthorProfile", {id: userId})}
+                    >{username}</Text>
                     <Text style={styles.joineddateText}>Joined on {joinedDate}</Text>
                 </View>
             </View>

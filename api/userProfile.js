@@ -22,40 +22,25 @@ const headersList = {
 }
 
 // Get a single user
-export const getUser = async (userId, setData) => {
+export const getUser = async (userId, setData, setArticles) => {
     try {
-        const res = await axios.get(`${baseUrl}/user/${userId}`);
-        setData(res.data);
+        await axios.get(`${baseUrl}/user/${userId}`)
+        .then(async (res) => {
+            setData(res.data);
+            const articles = await axios.get(`${baseUrl}/articles?user=${res.data.username}`);
+            setArticles(articles.data);
+        })
+        .catch(err => console.log(err));
     } catch (error) {
         console.log(error);
     }
 }
 
 // Get Author Articles
-export const getAuthorArticles = async (userId, setData) => {
-    var userArticles = [];
+export const getAuthorArticles = async (username, setData) => {
     try {
-        await axios.get(`${baseUrl}/user/${userId}`)
-        .then(res => res.data.articles.forEach(async (id) => {
-            await axios.get(`${baseUrl}/articles/${id}`)
-            .then(res => {
-                userArticles.push(res.data);
-                console.log("inside", userArticles);
-            })
-            .catch(e => console.log(e));
-        }))
-        .catch(e => console.log(e));
-        // const userData = user.data;
-        // userData && userData.articles.forEach(async (articleId) => {
-        //     const res = await axios.get(`${baseUrl}/articles/${articleId}`);
-        //     if(res.data){
-        //         userArticles.push(res.data);
-        //         console.log("inside",userArticles);
-        //     }
-        // });
-        console.log("outside", userArticles);
-        // setData(userArticles);
-    // return userArticles;
+        const res = await axios.get(`${baseUrl}/articles?user=${username}`)
+        setData(res.data);
     } catch (error) {
         console.log(error);
     }

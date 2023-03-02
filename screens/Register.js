@@ -3,10 +3,29 @@ import { StyleSheet, View, Pressable, Text, Image, TextInput } from "react-nativ
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import GlobalStyles from "../GlobalStyles";
+import { register } from "../api/userApi";
 
 const Register = () => {
   const navigation = useNavigation();
 
+  // States
+  const [ username, setUsername ] = React.useState("");
+  const [ email, setEmail ] = React.useState("");
+  const [ password, setPassword ] = React.useState("");
+  const [ confirmPassword, setConfirmPassword ] = React.useState("");
+  const [ msg, setMsg ] = React.useState("");
+
+  const handleSubmit = () => {
+    if(password !== confirmPassword){
+      alert("Please write same password in confirm password.");
+    }
+    else{
+      register({username, email, password}, setMsg);
+      alert(msg);
+      navigation.navigate("Login");
+    }
+  }
+  
   return (
     <View stye={styles.registerMain}>
       <LinearGradient 
@@ -33,25 +52,25 @@ const Register = () => {
         {/* Username */}
         <View style={[styles.username, styles.passwordPosition]}>
           <Text style={styles.usernameText}>Username</Text>
-          <TextInput style={styles.userInput}></TextInput>
+          <TextInput style={styles.userInput} value={username} onChangeText={text => setUsername(text)}></TextInput>
         </View>
 
         {/* Email */}
         <View style={[styles.email, styles.emailPosition]}>
           <Text style={styles.usernameText}>Email</Text>
-          <TextInput style={styles.userInput}></TextInput>
+          <TextInput style={styles.userInput} value={email} onChangeText={text => setEmail(text)}></TextInput>
         </View>
 
         {/* Password */}
         <View style={[styles.password, styles.passwordPosition]}>
           <Text style={styles.usernameText}>Password</Text>
-          <TextInput style={styles.userInput}></TextInput>
+          <TextInput style={styles.userInput} value={password} onChangeText={text => setPassword(text)}></TextInput>
         </View>
 
         {/* Confirm Password */}
         <View style={[styles.confirmPassword, styles.confirmPasswordPosition]}>
           <Text style={styles.usernameText}>Confirm Password</Text>
-          <TextInput style={styles.userInput}></TextInput>
+          <TextInput style={styles.userInput} value={confirmPassword} onChangeText={text => setConfirmPassword(text)}></TextInput>
         </View>
 
         {/* Buttons */}
@@ -72,7 +91,7 @@ const Register = () => {
                 styles.iconLayout,
                 styles.loginBoxShadowBox,
               ]}
-              onPress={() => navigation.navigate("Articles")}
+              onPress={() => navigation.navigate("Login")}
             >
               <Text style={[styles.login1, styles.login1Typo]}>Login</Text>
             </Pressable>
@@ -93,7 +112,7 @@ const Register = () => {
                 styles.iconLayout,
                 styles.loginBoxShadowBox,
               ]}
-              onPress={() => navigation.navigate("Register")}
+              onPress={handleSubmit}
             >
               <Text style={[styles.register, styles.login1Typo, styles.registerTypo]}>Register</Text>
             </Pressable>

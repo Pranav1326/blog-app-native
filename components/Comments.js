@@ -71,7 +71,12 @@ const Comments = ({ articleTitle, articleId }) => {
             }
 
             {/* All Comments */}
-            {renderComments}
+            {comments === null
+                ? 
+                renderComments
+                : 
+                <Text style={styles.noComments}>No Comments!</Text>    
+            }
         </View>
     );
 }
@@ -92,8 +97,8 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     author: {
-        color: GlobalStyles.Color.white,
-        fontSize: GlobalStyles.FontSize.size_5xl,
+        color: GlobalStyles.Color.gray_200,
+        fontSize: GlobalStyles.FontSize.size_3xl,
         fontFamily: GlobalStyles.FontFamily.hammersmithOne,
     },
     comment: {
@@ -102,7 +107,7 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         marginBottom: 5,
         marginTop: 5,
-        padding: 7,
+        padding: 10,
         borderWidth: 1,
         borderColor: '#fff',
         borderRadius: 5,
@@ -121,9 +126,9 @@ const styles = StyleSheet.create({
     commentText: {
         color: GlobalStyles.Color.white,
         fontFamily: GlobalStyles.FontFamily.hammersmithOne,
-        fontSize: GlobalStyles.FontSize.size_4xl,
-        marginTop: 10,
-        marginBottom: 10,
+        fontSize: GlobalStyles.FontSize.size_5xl,
+        marginTop: 5,
+        marginBottom: 5,
     },
     newComment: {
         width: '86%',
@@ -165,7 +170,12 @@ const styles = StyleSheet.create({
     },
     delete: {
         color: 'rgba(255,50,100,1)',
-    }
+    },
+    noComments: {
+        color: GlobalStyles.Color.white,
+        fontSize: GlobalStyles.FontSize.size_4xl,
+        textAlign: 'center'
+    },
 });
 
 export default Comments;

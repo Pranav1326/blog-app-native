@@ -27,9 +27,9 @@ const Article = ({ route }) => {
     );
   }
   
-  const renderTags = article && article.tags.map(tag => {
+  const renderTags = article && article.tags.map((tag, id) => {
     return(
-      <View style={styles.tagPosition}>
+      <View style={styles.tagPosition} key={id}>
         <Text style={[styles.tagText, styles.webdevPosition]}>
           {tag}
         </Text>
@@ -467,10 +467,10 @@ const styles = StyleSheet.create({
     height: 64,
   },
   article: {
-    backgroundColor: GlobalStyles.Color.gray_700,
+    backgroundColor: GlobalStyles.Color.black,
     flex: 1,
     height: '100%',
-    overflow: "hidden",
+    // overflow: "hidden",
     width: "100%",
   },
   authorDate: {

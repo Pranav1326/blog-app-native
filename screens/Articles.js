@@ -6,6 +6,7 @@ import ArticleCard from './ArticleCard';
 import GlobalStyles from "../GlobalStyles";
 import { ScrollView } from "react-native-gesture-handler";
 import { fetchAllArticles } from "../api/article";
+import Footer from "../components/Footer";
 
 const Articles = () => {
   const navigation = useNavigation();
@@ -16,10 +17,10 @@ const Articles = () => {
     fetchAllArticles(setData);
   }, []);
   
-  const renderArtices = data.map(article => {
+  const renderArtices = data.map((article, id) => {
     return(
       <ArticleCard
-        key={article._id}
+        key={id}
         articleId={article._id}
         authorId={article.authorId}
         author={article.author}
@@ -31,7 +32,7 @@ const Articles = () => {
     );
   });
   
-  if(data === []){
+  if(!data){
     return(
       <View styles={styles.articles}>
         <Text styles={styles.loadingText}>Loading...</Text>
@@ -40,10 +41,11 @@ const Articles = () => {
   }
   
   return (
-    <ScrollView>
-      <View style={styles.articles}>
+    <ScrollView style={styles.articles}>
+      <View>
         <Text style={styles.mainHeading}>Articles</Text>
-        {renderArtices}
+          {renderArtices}
+          <Footer />
       </View>
     </ScrollView>
   );
@@ -350,8 +352,10 @@ const styles = StyleSheet.create({
     height: 64,
   },
   articles: {
+    paddingBottom: 100,
+    height: '100%',
+    width: '100%',
     backgroundColor: GlobalStyles.Color.gray_700,
-    flex: 1,
     paddingBottom: 90,
   },
   mainHeading: {

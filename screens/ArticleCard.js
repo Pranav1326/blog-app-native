@@ -10,9 +10,10 @@ const ArticleCard = ({articleId, authorId, author, createdAt, title, tags, comme
     const navigation = useNavigation();
 
     const [data, setData] = React.useState(null);
+    const [articles, setArticles] = React.useState(null);
     
     React.useEffect(() => {
-      getUser(authorId, setData);
+      getUser(authorId, setData, setArticles);
     }, []);
     
     const renderTags = data && tags.map((tag, i) => {

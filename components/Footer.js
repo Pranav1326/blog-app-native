@@ -25,11 +25,13 @@ const Footer = () => {
 
 const styles = StyleSheet.create({
     footer: {
+        // marginTop: 20,
         width: '100%',
         height: 260,
         display: 'flex',
         justifyContent: 'center',
-        alignItems: "center"
+        alignItems: "center",
+        backgroundColor: GlobalStyles.Color.black,
     },
     bg: {
         width: '100%',
@@ -39,7 +41,7 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: GlobalStyles.Color.gray_800
+        backgroundColor: GlobalStyles.Color.gray_800,
     },
     aboutBtn: {
         backgroundColor: 'rgba(255,255,255,0.3)',

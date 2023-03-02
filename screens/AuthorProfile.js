@@ -20,25 +20,25 @@ const AuthorProfile = ({route}) => {
     const [ articles, setArticles ] = React.useState(null);
 
     React.useEffect(() => {
-        getUser(id, setUser);
-        // getAuthorArticles(id);
+        getUser(id, setUser, setArticles);
     }, []);
-    console.log(articles);
+    console.log("articles of user", user.articles);
   
-    const renderArtices = articles && articles.map(article => {
-        return(
-            <ArticleCard
-            key={article._id}
-            id={article.authorId}
+    const renderArtices = articles && articles.map((article, id) => {
+      return(
+          <ArticleCard
+            key={id}
+            articleId={article._id}
+            authorId={article.authorId}
             author={article.author}
             createdAt={new Date(article.createdAt).toDateString()}
             title={article.title}
             tags={article.tags}
-            // comments={article && article.comments.length}
-            />
-        );
+            comments={article.comments.length}
+          />
+      );
     });
-  
+    
     return (
         <ScrollView>
         <View style={styles.profile}>
@@ -57,7 +57,6 @@ const AuthorProfile = ({route}) => {
                 styles.articleShadowBox1,
             ]}
             >
-            {/* <View style={[styles.profileBg, styles.articleLayout, styles.bgBg]} /> */}
 
             {/* User Profile-Pic */}
             <Image
@@ -168,15 +167,18 @@ const AuthorProfile = ({route}) => {
 
             <View style={styles.articleSection}>
             {/* User Articles */}
-            {/* <Text style={[styles.articles, styles.blogTypo]}>Articles</Text> */}
-            {/* {user.articles === [] ? 
-                <Text style={styles.noArticles}>No Articles written by you!</Text>
-                : 
-                {renderArtices}
-            } */}
-            {/* {renderArtices} */}
+            <Text style={[styles.articles, styles.blogTypo]}>{user.articles===[] && "No "}Articles</Text>
+            {articles ? 
+            (articles !== [] ?
+              renderArtices
+              :
+              <Text style={styles.noArticles}>No Articles written by {user.username}!</Text>
+              ) : 
+              <View style={styles.articles}>
+                <Text style={styles.loadingText}>Loading...</Text>
+              </View> 
+            }
             </View>
-
             <Footer />
         </View>
         </ScrollView>
@@ -187,6 +189,12 @@ const styles = StyleSheet.create({
   articleLayout1: {
     width: 381,
     height: 208,
+  },
+  loadingText: {
+    color: GlobalStyles.Color.white,
+    fontSize: GlobalStyles.FontSize.size_9xl,
+    fontFamily: GlobalStyles.FontFamily.hammersmithOne,
+    textAlign: 'center',  
   },
   articleShadowBox1: {
     shadowOpacity: 1,
