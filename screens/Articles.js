@@ -42,11 +42,11 @@ const Articles = () => {
   
   return (
     <ScrollView style={styles.articles}>
-      <View>
+      <View style={styles.articlesView}>
         <Text style={styles.mainHeading}>Articles</Text>
           {renderArtices}
-          <Footer />
       </View>
+          <Footer />
     </ScrollView>
   );
 };
@@ -56,6 +56,9 @@ const styles = StyleSheet.create({
     width: '100%',
     // height: '100%',
     // position: "absolute",
+  },
+  articlesView: {
+    marginBottom: 10,
   },
   profilePosition: {
     top: 0,
