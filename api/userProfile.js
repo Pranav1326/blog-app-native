@@ -7,8 +7,8 @@ const baseUrl = `https://blog-api-c8j7.onrender.com/api`;
 const getFromStorage = async (key) => {
     try {
         const bToken = await AsyncStorage.getItem(key);
-        // const token = JSON.parse(bToken);
-        return bToken;
+        const token = JSON.parse(bToken);
+        return token;
     } catch (error) {
         console.log(error);
     }
@@ -47,7 +47,7 @@ export const getAuthorArticles = async (username, setData) => {
 }
 
 // Update User Profile
-export const updateUser = async (data, userId, username, dispatch, navigation) => {
+export const updateUser = async (data, userId, username, token, dispatch, navigation) => {
     const config = {
         method: 'PUT',
         url: `${baseUrl}/user/update/${userId}`,
@@ -58,12 +58,11 @@ export const updateUser = async (data, userId, username, dispatch, navigation) =
         data : {...data, userId}
     };
     try {
-        console.log(headersList);
         const res = await axios.request(config);
         if(res) {
             alert(`User ${username} updated Successfully.`);
             dispatch(USER_UPDATE(res.data));
-            navigate('/profile');
+            navigation.navigate('/Profile');
         } 
         dispatch(UPDATE_USER(res.data));
         navigation.navigate('/Profile');

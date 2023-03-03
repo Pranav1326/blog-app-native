@@ -22,7 +22,6 @@ const AuthorProfile = ({route}) => {
     React.useEffect(() => {
         getUser(id, setUser, setArticles);
     }, []);
-    console.log("articles of user", user.articles);
   
     const renderArtices = articles && articles.map((article, id) => {
       return(

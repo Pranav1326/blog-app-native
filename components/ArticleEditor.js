@@ -18,8 +18,7 @@ import HR from '../assets/svgs/HR';
 import { SvgXml } from 'react-native-svg';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const ArticleEditor = () => {
-    const [text, setText] = useState("");
+const ArticleEditor = ({text, setText}) => {
     return (
         <View>
             <View style={styles.inputBox}>

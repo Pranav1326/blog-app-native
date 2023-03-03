@@ -71,7 +71,7 @@ const Comments = ({ articleTitle, articleId }) => {
             }
 
             {/* All Comments */}
-            {comments === null
+            {comments
                 ? 
                 renderComments
                 : 

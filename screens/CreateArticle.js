@@ -3,10 +3,24 @@ import React, { useState } from 'react';
 import ArticleEditor from '../components/ArticleEditor';
 import GlobalStyles from '../GlobalStyles';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useSelector } from 'react-redux';
+import { createArticle } from '../api/article';
+import { useNavigation } from '@react-navigation/core';
 
 const CreateArticle = () => {
   
-  const [text, setText] = useState("");
+  const navigation = useNavigation();
+  const user = useSelector(state => state.userReducer.user);
+  const token = useSelector(state => state.userReducer.token);
+  
+  const [ title, setTitle ] = useState("");
+  const [ tags, setTags ] = useState("");
+  const [ text, setText ] = useState("");
+  
+  const handleOnSubmit = () => {
+    const data = {title, tags: [tags], content: text, author: user.username, authorId: user._id};
+    createArticle(data, token,  navigation);
+  }
   
   return (
     <View style={styles.markdownMain}>
@@ -23,6 +37,8 @@ const CreateArticle = () => {
           <View style={styles.joinedOnTextBg} />
           <TextInput
             style={styles.fieldValue}
+            value={title}
+            onChangeText={text => setTitle(text)}
           />
         </View>
         {/* Tags */}
@@ -38,10 +54,15 @@ const CreateArticle = () => {
             style={[styles.fieldValue]}
             placeholder={"blog, article, post"}
             placeholderTextColor={GlobalStyles.Color.gray_200}
+            value={tags}
+            onChangeText={text => setTags(text)}
           />
         </View>
         
-        <ArticleEditor />
+        <ArticleEditor 
+          text={text}
+          setText={setText}
+        />
 
         <View style={styles.btns}>
           <View style={[styles.saveBtn, styles.btnLayout]}>
@@ -53,7 +74,7 @@ const CreateArticle = () => {
             />
             <TouchableOpacity
               style={styles.save}
-              onPress={() => alert("Save")}
+              onPress={handleOnSubmit}
             >
               <Text style={styles.saveText}>Save</Text>
             </TouchableOpacity>

@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 const EditProfile = () => {
   const navigation = useNavigation();
   const user = useSelector(state => state.userReducer.user);
+  const token = useSelector(state => state.userReducer.token);
   const dispatch = useDispatch();
 
   const [ bio, setBio ] = React.useState(user.bio);
@@ -21,14 +22,13 @@ const EditProfile = () => {
   
   const handleSubmit = e => {
     // e.preventDefault();
-    console.log(bio, work, location, email);
     const userData = {
       bio: bio!=="" ? bio : "",
       work: work!=="" ? work : "",
       location: location!=="" ? location : "",
       email: email!=="" ? email : "",
     }
-    updateUser(userData,user._id, user.username, dispatch, navigation);
+    updateUser(userData,user._id, user.username,token , dispatch, navigation);
   }
   
   return (
